@@ -1,12 +1,18 @@
 import './style.css';
-import {getSwapiPeople} from '../../helpers/FetchWrapper'
 import { useEffect, useState } from 'react';
 import swapiPerson from '../../helpers/swapiPerson';
+import NavBar from '../NavBar';
+import Details from '../Details';
 
 
 const App = () => {
-  const [swapiResponse, setSwapiResponse] = useState([]);
-  const [page, setPage]= useState(1);
+  const [swapiResponse, setSwapiResponse] = useState<swapiPerson[]>([]);
+  const [page, setPage]= useState<number>(1);
+  const [currentlySelected, setCurrentlySelected] = useState<swapiPerson|null>(null)
+
+  const incrementPage = () => {
+    setPage(page+1);
+  }
 
   useEffect(()=> {
     fetch("https://swapi.dev/api/people/?page="+page)
@@ -17,16 +23,11 @@ const App = () => {
       setSwapiResponse(prev => prev.concat(results));
     })
   },[page])
+
   return (
-    <div className="App">
-      {swapiResponse.map((el: swapiPerson) => {
-        return (
-          <h1>{el.name}</h1>
-        )
-      })}
-      <button onClick={() => setPage(page+1)}>
-        click me
-      </button>
+    <div className="main_container">
+    <NavBar People={swapiResponse} Click={incrementPage} SetSelected={setCurrentlySelected}/>
+    {currentlySelected != null && <Details Person={currentlySelected}/>}
     </div>
   );
 }
