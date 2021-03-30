@@ -1,7 +1,7 @@
 import swapiPerson from "./swapiPerson";
 
 interface DetailsProps {
-    Person: swapiPerson;
+    Person: swapiPerson|null;
 }
 
 export default DetailsProps;
