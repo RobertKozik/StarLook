@@ -1,21 +1,21 @@
 interface swapiPerson {
 	//values:
-	name: String;
-	height: String;
-	mass: String;
-	hair_color: String;
-	skin_color: String;
-	eye_color: String;
-	birth_year: String;
-	gender: String;
+	name: string;
+	height: string;
+	mass: string;
+	hair_color: string;
+	skin_color: string;
+	eye_color: string;
+	birth_year: string;
+	gender: string;
 	//Links:
-	homeworld: String;
-	films: String[];
-	species: String[];
-	vehicles: String[];
-	starships: String[];
+	homeworld: string;
+	films: string[];
+	species: string[];
+	vehicles: string[];
+	starships: string[];
 	//self-link
-	self: String;
+	self: string;
 }
 
 export default swapiPerson;
