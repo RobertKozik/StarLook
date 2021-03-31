@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import swapiPerson from '../../helpers/swapiPerson';
 import NavBar from '../NavBar';
 import Details from '../Details';
+import swapiFilm from '../../helpers/swapiFilm';
 
 
 const App = () => {
@@ -11,15 +12,23 @@ const App = () => {
   const [page, setPage]= useState<string|null>("https://swapi.dev/api/people/?page=1");
   const [currentlySelected, setCurrentlySelected] = useState<swapiPerson|null>(null)
   const [nameFilter, setNameFilter] = useState<string>("");
+  const [filmFilter, setFilmFilter] = useState<swapiFilm[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const filterResponse = () => {
     //if filter is empty filteredResponse is just a response
     if(nameFilter === '') return setFilteredSwapiResponse(swapiResponse);
+    const searchUpperCase = nameFilter.toUpperCase();
+    const filmSearched:string|undefined = filmFilter.find(film => film.title.toUpperCase() === searchUpperCase)?.url;
     const filtered:swapiPerson[] = swapiResponse.filter(element => {
       //make filter case insensitive
       const allUpperName:string = element.name.toUpperCase();
-      return allUpperName.includes(nameFilter.toUpperCase());
+      let include = false;
+      if(filmSearched !== undefined){
+      element.films.find(film => film === filmSearched) === undefined?include = false : include = true;
+      }
+      include = include || allUpperName.includes(searchUpperCase);
+      return include;
     })
     //if no matching records fetch Data until at least one is found or no more people in db;
     if(filtered.length === 0 && page !== null) {
@@ -27,10 +36,6 @@ const App = () => {
     }
     console.log(filtered);
     setFilteredSwapiResponse(filtered);
-  }
-  
-  const fetchAllRemainingData = () => {
-    
   }
 
   const fetchData = () => {
@@ -40,13 +45,23 @@ const App = () => {
     .then(res => res.json())
     .then(json => {
       const results = json.results;
-      console.log(json);
+      //console.log(json);
       setSwapiResponse(prev => prev.concat(results));
       json.next==null?setPage(null):setPage(changeToHttps(json.next));
       setIsFetching(false);
     })
   }
 
+  const fetchAllFilms = ():void => {
+    fetch("https://swapi.dev/api/films")
+    .then(res => res.json())
+    .then(json => {
+      const result = json.results;
+      const resultArray:swapiFilm[] = [];
+      result.map((el:any) => resultArray.push({title: el.title, url: el.url}))
+      setFilmFilter(resultArray);
+    })
+  }
 
   useEffect(() => filterResponse(), 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,6 +69,8 @@ const App = () => {
 
   useEffect(()=> {
     fetchData();
+
+    fetchAllFilms();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
