@@ -34,7 +34,7 @@ const App = () => {
     if(filtered.length === 0 && page !== null) {
       fetchData();
     }
-    console.log(filtered);
+    //console.log(filtered);
     setFilteredSwapiResponse(filtered);
   }
 
