@@ -3,6 +3,9 @@ import DetailsProps from "../../helpers/DetailsProps";
 import swapiFilm from "../../helpers/swapiFilm";
 import swapiPersonDetails from "../../helpers/swapiPersonDetails";
 import swapiSpecie from "../../helpers/swapiSpecie";
+import LoadingIndicator from "../LoadingIndicator";
+
+import './style.css';
 
 const Details = ({Person}: DetailsProps) => {
     const [details, setDetails] = useState<swapiPersonDetails|null>(null);
@@ -35,24 +38,66 @@ const Details = ({Person}: DetailsProps) => {
 
     if(!isLoading) {
         return (
-            <div>
-                <h1>{Person?.name}</h1>
-                <ol>
-                    {details!.films.map((el,key) => {
-                        return (<li key={key}>{el.title}</li>)
-                    })}
-                </ol>
-                <ol>
-                    {details!.species.map((el,key) => {
-                        return (<li key={key}>{el.name}</li>)
-                    })}
-                </ol>
-                <p>{details!.homeworld}</p>
+            <div className="details_wrapper">
+                <div className="details_inner_wrapper">
+                    <h1>{Person?.name}</h1>
+                    <div className="list_outer_wrapper">
+                        <div className="list_inner_wrapper">
+                            <div className="details_element">
+                                <label>films: </label>
+                                <ul className="film_list">
+                                    {details!.films.map((el,key) => {
+                                        return (<li key={key}>{el.title}</li>)
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="list_inner_wrapper">
+                            <div className="details_element">
+                                <label>spiece: </label>
+                                <ul className="spieces_list">
+                                    {details!.species.map((el,key) => {
+                                        return (<li key={key}>{el.name}</li>)
+                                    })}
+                                </ul>
+                            </div>
+                            <div className="details_element">
+                                <label>eye color: </label>
+                                <ul>
+                                    <li>{Person!.eye_color}</li>
+                                </ul>
+                            </div>
+                            <div className="details_element">
+                                <label>mass: </label>
+                                <ul>
+                                    <li>{Person!.mass}</li>
+                                </ul>
+                            </div>
+                            <div className="details_element">
+                                <label>skin color: </label>
+                                <ul>
+                                    <li>{Person!.skin_color}</li>
+                                </ul>
+                            </div>
+                            <div className="details_element">
+                                <label>birth year: </label>
+                                <ul>
+                                    <li>{Person!.birth_year}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 className="homeworld"><label>homeworld: </label>{details!.homeworld}</h2>
+                </div>
             </div>
         )
     }
     return (
-        <h1> Loading... </h1>
+        <div className="details_wrapper">
+            <div className="loading_outer_wrapper">
+                <LoadingIndicator />
+            </div>
+        </div>
     )
 }
 

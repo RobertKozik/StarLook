@@ -1,7 +1,11 @@
 import NavBarProps from "../../helpers/NavBarProps";
 import {useState} from 'react';
 
-const NavBar = ({People, Fetch, SetSelected}: NavBarProps) => {
+import LoadingIndicator from '../LoadingIndicator';
+
+import "./style.css";
+
+const NavBar = ({People, Fetch, SetSelected, CanLoad}: NavBarProps) => {
     const [isFetching, setIsFetching] = useState<boolean>(false);
     
     
@@ -10,7 +14,7 @@ const NavBar = ({People, Fetch, SetSelected}: NavBarProps) => {
         const bottom = node.scrollHeight - node.scrollTop === node.clientHeight;
         if (bottom && !isFetching) {    
             setIsFetching(true);  
-        console.log("BOTTOM REACHED:",bottom); 
+        //console.log("BOTTOM REACHED:",bottom); 
         Fetch();
 
         setTimeout(() => setIsFetching(false), 500);
@@ -18,17 +22,23 @@ const NavBar = ({People, Fetch, SetSelected}: NavBarProps) => {
     }
 
     return (
-        <nav onScroll={scrollListener} style={{overflow: "auto", height: "80vh", width: "30vw", backgroundColor: "aqua"}}>
-            <ol>
+        <nav onScroll={scrollListener} className="nav_bar">
+            <ul>
                 {People.map((Person, key) => {
                     return (
                         <li key={key} onClick={() => SetSelected(People[key])}>
-                            <h2>{Person.name}</h2>
-                            <h3>{Person.gender}</h3> <h3>{Person.birth_year}</h3>
+                            <h2 className="name_header">{Person.name}</h2>
+                            <div className="info_wrapper">
+                                <h3 className="additional_info"><label>Gender: </label> {Person.gender}</h3> 
+                                <h3 className="additional_info"><label>Birth date: </label>{Person.birth_year}</h3>
+                            </div>
                         </li>
                     );
                 })}
-            </ol>
+                
+                    {CanLoad && <li><LoadingIndicator /></li>}
+                
+            </ul>
         </nav>
     )
 }

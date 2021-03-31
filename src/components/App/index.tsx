@@ -76,8 +76,10 @@ const App = () => {
 
   return (
     <div className="main_container">
-      <input type="text" onChange={(e) => setNameFilter(e.target.value)}></input>   
-        <NavBar People={filteredSwapiResponse} Fetch={fetchData} SetSelected={setCurrentlySelected}/>
+      <div className="input_nav_wrapper">
+        <input type="text" placeholder="StarLook! Type name of character of film" onChange={(e) => setNameFilter(e.target.value)}></input>   
+        <NavBar People={filteredSwapiResponse} Fetch={fetchData} SetSelected={setCurrentlySelected} CanLoad={page !== null}/>
+      </div>
       {currentlySelected != null && <Details Person={currentlySelected}/>}
     </div>
   );
