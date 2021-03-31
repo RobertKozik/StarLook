@@ -15,17 +15,19 @@ const App = () => {
   const [filmFilter, setFilmFilter] = useState<swapiFilm[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const filterResponse = () => {
+  //filter all fetched records and store them in useState fillteredSwapiResponse
+  const filterResponse = ():void => {
     //if filter is empty filteredResponse is just a response
     if(nameFilter === '') return setFilteredSwapiResponse(swapiResponse);
-    const searchUpperCase = nameFilter.toUpperCase();
+    const searchUpperCase:string = nameFilter.toUpperCase();
+    //check if searched phrase is name of film
     const filmSearched:string|undefined = filmFilter.find(film => film.title.toUpperCase() === searchUpperCase)?.url;
     const filtered:swapiPerson[] = swapiResponse.filter(element => {
       //make filter case insensitive
       const allUpperName:string = element.name.toUpperCase();
-      let include = false;
+      let include:boolean = false;
       if(filmSearched !== undefined){
-      element.films.find(film => film === filmSearched) === undefined?include = false : include = true;
+        element.films.find(film => film === filmSearched) === undefined?include = false : include = true;
       }
       include = include || allUpperName.includes(searchUpperCase);
       return include;
@@ -38,7 +40,9 @@ const App = () => {
     setFilteredSwapiResponse(filtered);
   }
 
-  const fetchData = () => {
+  //fetch people data page by page
+  const fetchData = ():void => {
+    //stop executing when there is no page left or fetching is executing
     if(page === null || isFetching) return;
     setIsFetching(true);
     fetch(page)
@@ -52,6 +56,7 @@ const App = () => {
     })
   }
 
+  //fetch all films and store them in useState
   const fetchAllFilms = ():void => {
     fetch("https://swapi.dev/api/films")
     .then(res => res.json())
@@ -63,10 +68,12 @@ const App = () => {
     })
   }
 
+  //updade filltered records every data fetch or change of input
   useEffect(() => filterResponse(), 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [nameFilter, swapiResponse]);
 
+  //on mount component fetch data
   useEffect(()=> {
     fetchData();
 

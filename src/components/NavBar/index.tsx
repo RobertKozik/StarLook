@@ -8,7 +8,7 @@ import "./style.css";
 const NavBar = ({People, Fetch, SetSelected, CanLoad}: NavBarProps) => {
     const [isFetching, setIsFetching] = useState<boolean>(false);
     
-    
+    // checks if element is scrolled to bottom
     const scrollListener = (event: any) => {
         var node = event.target;
         const bottom = node.scrollHeight - node.scrollTop === node.clientHeight;

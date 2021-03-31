@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import DetailsProps from "../../helpers/DetailsProps";
-import swapiFilm from "../../helpers/swapiFilm";
 import swapiPersonDetails from "../../helpers/swapiPersonDetails";
-import swapiSpecie from "../../helpers/swapiSpecie";
 import LoadingIndicator from "../LoadingIndicator";
 
 import './style.css';
@@ -13,18 +11,21 @@ const Details = ({Person}: DetailsProps) => {
 
     useEffect(() => {
         setIsLoading(true);
-        let promises = Person!.films.map(uri => fetch(changeToHttps(uri)));
+        let promises: Promise<any>[] = Person!.films.map(uri => fetch(changeToHttps(uri)));
         promises = promises.concat(Person!.species.map(uri => fetch(changeToHttps(uri))));
         promises.push(fetch(changeToHttps(Person!.homeworld)));
         Promise.all(promises).then(res => Promise.all(res.map(r => r.json())))
         .then (
             (result) => {
                 let newDetails:swapiPersonDetails = { films: [], species: [], homeworld: ""};
-                result.forEach((el,key) => {
+                result.forEach((el:any,key:number) => {
+                    //first promises are films to fetch
                     if(key < Person!.films.length) {
                         newDetails.films.push({title: el.title, url: el.url})
+                    // next are species
                     } else if( key <promises.length - 1) {
                         newDetails.species.push({name: el.name, average_lifespan: el.average_lifespan});
+                    //last one is homeworld
                     } else {
                         newDetails.homeworld = el.name;
                     }      
@@ -32,6 +33,7 @@ const Details = ({Person}: DetailsProps) => {
                 setDetails(newDetails);
             })
         .then(() => {
+            //when done, set loading state to false - all data loaded
             setIsLoading(false);
             })
     },[Person])
