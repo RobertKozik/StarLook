@@ -2,7 +2,7 @@ import swapiPerson from "./swapiPerson";
 
 interface NavBarProps {
     People: swapiPerson[];
-    Click: Function;
+    Fetch: Function;
     SetSelected: Function;
 }
 
