@@ -1,5 +1,6 @@
 interface swapiFilm {
-    title: String;
+    title: string;
+    url: string;
 }
 
 export default swapiFilm;

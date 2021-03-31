@@ -19,7 +19,7 @@ const Details = ({Person}: DetailsProps) => {
                 let newDetails:swapiPersonDetails = { films: [], species: [], homeworld: ""};
                 result.forEach((el,key) => {
                     if(key < Person!.films.length) {
-                        newDetails.films.push({title: el.title})
+                        newDetails.films.push({title: el.title, url: el.url})
                     } else if( key <promises.length - 1) {
                         newDetails.species.push({name: el.name, average_lifespan: el.average_lifespan});
                     } else {
