@@ -31,7 +31,7 @@ const App = () => {
 
   return (
     <div className="main_container">
-    <NavBar People={swapiResponse} Click={fetchData} SetSelected={setCurrentlySelected}/>
+    <NavBar People={swapiResponse} Fetch={fetchData} SetSelected={setCurrentlySelected}/>
     {currentlySelected != null && <Details Person={currentlySelected}/>}
     </div>
   );
