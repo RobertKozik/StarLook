@@ -11,6 +11,7 @@ const App = () => {
   const [page, setPage]= useState<string|null>("https://swapi.dev/api/people/?page=1");
   const [currentlySelected, setCurrentlySelected] = useState<swapiPerson|null>(null)
   const [nameFilter, setNameFilter] = useState<string>("");
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const filterResponse = () => {
     //if filter is empty filteredResponse is just a response
@@ -20,15 +21,21 @@ const App = () => {
       const allUpperName:string = element.name.toUpperCase();
       return allUpperName.includes(nameFilter.toUpperCase());
     })
-    //if no matching records fetch Data until at least one is found;
-    if(filtered.length === 0) return fetchData();
+    //if no matching records fetch Data until at least one is found or no more people in db;
+    if(filtered.length === 0 && page !== null) {
+      fetchData();
+    }
     console.log(filtered);
     setFilteredSwapiResponse(filtered);
   }
   
-  const fetchData = () => {
-    if(page === null) return;
+  const fetchAllRemainingData = () => {
+    
+  }
 
+  const fetchData = () => {
+    if(page === null || isFetching) return;
+    setIsFetching(true);
     fetch(page)
     .then(res => res.json())
     .then(json => {
@@ -36,6 +43,7 @@ const App = () => {
       console.log(json);
       setSwapiResponse(prev => prev.concat(results));
       json.next==null?setPage(null):setPage(changeToHttps(json.next));
+      setIsFetching(false);
     })
   }
 
