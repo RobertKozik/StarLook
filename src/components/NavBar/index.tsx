@@ -1,11 +1,24 @@
 import NavBarProps from "../../helpers/NavBarProps";
+import {useState} from 'react';
 
-
-const NavBar = ({People, Click, SetSelected}: NavBarProps) => {
+const NavBar = ({People, Fetch, SetSelected}: NavBarProps) => {
+    const [isFetching, setIsFetching] = useState<boolean>(false);
     
     
+    const scrollListener = (event: any) => {
+        var node = event.target;
+        const bottom = node.scrollHeight - node.scrollTop === node.clientHeight;
+        if (bottom && !isFetching) {    
+            setIsFetching(true);  
+        console.log("BOTTOM REACHED:",bottom); 
+        Fetch();
+
+        setTimeout(() => setIsFetching(false), 500);
+        }   
+    }
+
     return (
-        <nav style={{overflow: "auto", height: "80vh", width: "30vw", backgroundColor: "aqua"}}>
+        <nav onScroll={scrollListener} style={{overflow: "auto", height: "80vh", width: "30vw", backgroundColor: "aqua"}}>
             <ol>
                 {People.map((Person, key) => {
                     return (
@@ -16,9 +29,6 @@ const NavBar = ({People, Click, SetSelected}: NavBarProps) => {
                     );
                 })}
             </ol>
-            <button onClick={() => Click()}>
-                Click me!
-            </button>
         </nav>
     )
 }
